@@ -18,6 +18,11 @@ if [[ ${ENABLE_PARALLEL} == "true" ]]; then
 	PFLAG="-p"
 fi
 
+if [[ ${PROCS} != "" ]]; then
+	echo "Running tests with ${PROCS} processes"
+	PFLAG="-p ${PROCS}"
+fi
+
 # Allow for flake retries
 FFLAG=""
 if [[ ${ENABLE_FLAKY_RETRY} == "true" ]]; then
