@@ -252,7 +252,7 @@ var _ = Describe("Affiliated-certification operator certification,", Serial, fun
 	})
 
 	// 46698
-	It("no operators are labeled for testing [skip]", func() {
+	FIt("no operators are labeled for testing [skip]", func() {
 		By("Start test")
 		err := globalhelper.LaunchTests(
 			tsparams.TestCaseOperatorAffiliatedCertName,
