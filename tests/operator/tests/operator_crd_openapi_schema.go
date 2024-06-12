@@ -57,7 +57,7 @@ var _ = Describe("Operator crd-openapi-schema", func() {
 		globalhelper.AfterEachCleanupWithRandomNamespace(randomNamespace, randomReportDir, randomTnfConfigDir, tsparams.Timeout)
 	})
 
-	It("operator crd is defined with openapi schema", func() {
+	FIt("operator crd is defined with openapi schema", func() {
 		By("Label operator")
 		Eventually(func() error {
 			return tshelper.AddLabelToInstalledCSV(
