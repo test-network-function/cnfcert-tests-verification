@@ -34,6 +34,7 @@ var (
 		"app":                  "test",
 	}
 	TnfTargetOperatorLabels  = fmt.Sprintf("%s: %s", "test-network-function.com/operator", "target")
+	TnfTargetCrdFilters      = []string{"charts.operatorhub.io", }
 	OperatorGroupName        = "operator-test-operator-group"
 	OperatorLabel            = map[string]string{"test-network-function.com/operator": "target"}
 	CertifiedOperatorGroup   = "certified-operators"
@@ -44,7 +45,10 @@ var (
 	OperatorPrefixQuay       = "quay-operator"
 	OperatorPrefixKiali      = "kiali-operator"
 	OperatorPrefixOpenvino   = "openvino-operator"
+	OperatorPrefixCockroach  = "cockroachdb"
+	OperatorCockroachChannel = "stable-v6.x"
 	SubscriptionNameOpenvino = "ovms-operator-subscription"
+	CockroachDBExampleYAML   = "https://raw.githubusercontent.com/cockroachdb/cockroach-operator/master/examples/example.yaml"
 )
 
 const (

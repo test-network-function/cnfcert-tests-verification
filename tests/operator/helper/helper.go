@@ -3,6 +3,8 @@ package helper
 import (
 	"context"
 	"fmt"
+	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/golang/glog"
@@ -24,6 +26,21 @@ func DeployTestOperatorGroup(namespace string) error {
 				namespace,
 				[]string{namespace}),
 		)
+	}
+
+	return nil
+}
+
+func DeployCockroachDBCluster(namespace string) error {
+	// run exec command to deploy CockroachDB cluster
+	cmd := []string{"kubectl", "apply", "-n", namespace, "-f", tsparams.CockroachDBExampleYAML}
+	command := exec.Command(cmd[0], cmd[1:]...)
+	command.Stdout = os.Stdout
+	command.Stderr = os.Stderr
+	err := command.Run()
+
+	if err != nil {
+		return fmt.Errorf("error deploying CockroachDB cluster: %w", err)
 	}
 
 	return nil

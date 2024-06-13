@@ -33,7 +33,7 @@ var _ = Describe("Operator install-source,", Serial, func() {
 			[]string{tsparams.TestPodLabel},
 			[]string{},
 			[]string{},
-			[]string{}, randomTnfConfigDir)
+			tsparams.TnfTargetCrdFilters, randomTnfConfigDir)
 		Expect(err).ToNot(HaveOccurred())
 
 		// Install 3 separate operators for testing
@@ -42,10 +42,10 @@ var _ = Describe("Operator install-source,", Serial, func() {
 		err = tshelper.DeployTestOperatorGroup(randomNamespace)
 		Expect(err).ToNot(HaveOccurred(), "Error deploying operator group")
 
-		By("Deploy openvino operator for testing")
+		By("Deploy nginx-ingress-operator operator for testing")
 		err = tshelper.DeployOperatorSubscription(
-			"ovms-operator",
-			"alpha",
+			tsparams.OperatorPrefixCockroach,
+			tsparams.OperatorCockroachChannel,
 			randomNamespace,
 			tsparams.CertifiedOperatorGroup,
 			tsparams.OperatorSourceNamespace,
@@ -53,11 +53,11 @@ var _ = Describe("Operator install-source,", Serial, func() {
 			v1alpha1.ApprovalAutomatic,
 		)
 		Expect(err).ToNot(HaveOccurred(), ErrorDeployOperatorStr+
-			tsparams.OperatorPrefixOpenvino)
+			tsparams.OperatorPrefixCockroach)
 
-		err = tshelper.WaitUntilOperatorIsReady(tsparams.OperatorPrefixOpenvino,
+		err = tshelper.WaitUntilOperatorIsReady(tsparams.OperatorPrefixCockroach,
 			randomNamespace)
-		Expect(err).ToNot(HaveOccurred(), "Operator "+tsparams.OperatorPrefixOpenvino+
+		Expect(err).ToNot(HaveOccurred(), "Operator "+tsparams.OperatorPrefixCockroach+
 			" is not ready")
 
 		By("Deploy cloudbees-ci operator for testing")
@@ -133,11 +133,11 @@ var _ = Describe("Operator install-source,", Serial, func() {
 		By("Label operator")
 		Eventually(func() error {
 			return tshelper.AddLabelToInstalledCSV(
-				tsparams.OperatorPrefixOpenvino,
+				tsparams.OperatorPrefixCockroach,
 				randomNamespace,
 				tsparams.OperatorLabel)
 		}, tsparams.TimeoutLabelCsv, tsparams.PollingInterval).Should(Not(HaveOccurred()),
-			ErrorLabelingOperatorStr+tsparams.OperatorPrefixOpenvino)
+			ErrorLabelingOperatorStr+tsparams.OperatorPrefixCockroach)
 
 		By("Delete operator's subscription")
 		err := globalhelper.DeleteSubscription(randomNamespace,
@@ -206,19 +206,14 @@ var _ = Describe("Operator install-source,", Serial, func() {
 
 		Eventually(func() error {
 			return tshelper.AddLabelToInstalledCSV(
-				tsparams.OperatorPrefixOpenvino,
+				tsparams.OperatorPrefixCockroach,
 				randomNamespace,
 				tsparams.OperatorLabel)
 		}, tsparams.TimeoutLabelCsv, tsparams.PollingInterval).Should(Not(HaveOccurred()),
-			ErrorLabelingOperatorStr+tsparams.OperatorPrefixOpenvino)
-
-		By("Delete operator's subscription")
-		err := globalhelper.DeleteSubscription(randomNamespace,
-			tsparams.SubscriptionNameOpenvino)
-		Expect(err).ToNot(HaveOccurred())
+			ErrorLabelingOperatorStr+tsparams.OperatorPrefixCockroach)
 
 		By("Start test")
-		err = globalhelper.LaunchTests(
+		err := globalhelper.LaunchTests(
 			tsparams.TnfOperatorInstallSource,
 			globalhelper.ConvertSpecNameToFileName(CurrentSpecReport().FullText()),
 			randomReportDir,

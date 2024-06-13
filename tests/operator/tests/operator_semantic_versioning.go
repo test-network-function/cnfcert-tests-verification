@@ -28,17 +28,17 @@ var _ = Describe("Operator semantic-versioning,", func() {
 			[]string{tsparams.TestPodLabel},
 			[]string{tsparams.TnfTargetOperatorLabels},
 			[]string{},
-			[]string{}, randomTnfConfigDir)
+			tsparams.TnfTargetCrdFilters, randomTnfConfigDir)
 		Expect(err).ToNot(HaveOccurred())
 
 		By("Deploy operator group")
 		err = tshelper.DeployTestOperatorGroup(randomNamespace)
 		Expect(err).ToNot(HaveOccurred(), "Error deploying operator group")
 
-		By("Deploy openvino operator for testing")
+		By("Deploy nginx-ingress-operator for testing")
 		err = tshelper.DeployOperatorSubscription(
-			"ovms-operator",
-			"alpha",
+			tsparams.OperatorPrefixCockroach,
+			tsparams.OperatorCockroachChannel,
 			randomNamespace,
 			tsparams.CertifiedOperatorGroup,
 			tsparams.OperatorSourceNamespace,
@@ -46,11 +46,11 @@ var _ = Describe("Operator semantic-versioning,", func() {
 			v1alpha1.ApprovalAutomatic,
 		)
 		Expect(err).ToNot(HaveOccurred(), ErrorDeployOperatorStr+
-			tsparams.OperatorPrefixOpenvino)
+			tsparams.OperatorPrefixCockroach)
 
-		err = tshelper.WaitUntilOperatorIsReady(tsparams.OperatorPrefixOpenvino,
+		err = tshelper.WaitUntilOperatorIsReady(tsparams.OperatorPrefixCockroach,
 			randomNamespace)
-		Expect(err).ToNot(HaveOccurred(), "Operator "+tsparams.OperatorPrefixOpenvino+
+		Expect(err).ToNot(HaveOccurred(), "Operator "+tsparams.OperatorPrefixCockroach+
 			" is not ready")
 	})
 
@@ -62,7 +62,7 @@ var _ = Describe("Operator semantic-versioning,", func() {
 		By("Label operator")
 		Eventually(func() error {
 			return tshelper.AddLabelToInstalledCSV(
-				tsparams.OperatorPrefixOpenvino,
+				tsparams.OperatorPrefixCockroach,
 				randomNamespace,
 				tsparams.OperatorLabel)
 		}, tsparams.TimeoutLabelCsv, tsparams.PollingInterval).Should(Not(HaveOccurred()),
