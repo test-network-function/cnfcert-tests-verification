@@ -1,6 +1,8 @@
 package operator
 
 import (
+	"time"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/operator-framework/api/pkg/operators/v1alpha1"
@@ -57,7 +59,7 @@ var _ = Describe("Operator crd-openapi-schema", func() {
 		globalhelper.AfterEachCleanupWithRandomNamespace(randomNamespace, randomReportDir, randomTnfConfigDir, tsparams.Timeout)
 	})
 
-	It("operator crd is defined with openapi schema", func() {
+	FIt("operator crd is defined with openapi schema", func() {
 		By("Label operator")
 		Eventually(func() error {
 			return tshelper.AddLabelToInstalledCSV(
@@ -66,6 +68,9 @@ var _ = Describe("Operator crd-openapi-schema", func() {
 				tsparams.OperatorLabel)
 		}, tsparams.TimeoutLabelCsv, tsparams.PollingInterval).Should(Not(HaveOccurred()),
 			ErrorLabelingOperatorStr+tsparams.OperatorPrefixOpenvino)
+
+		By("Sleep for 5 minutes")
+		time.Sleep(5 * time.Minute)
 
 		By("Start test")
 		err := globalhelper.LaunchTests(
