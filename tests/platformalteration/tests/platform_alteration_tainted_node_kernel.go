@@ -56,6 +56,11 @@ var _ = Describe("platform-alteration-tainted-node-kernel", Serial, func() {
 			Skip("Tainting a node not support on Kind cluster, skipping...")
 		}
 
+		numNodes := globalhelper.GetNumberOfNodes(globalhelper.GetAPIClient().CoreV1Interface)
+		if numNodes == 1 {
+			Skip("There is only one node in the cluster, skipping...")
+		}
+
 		By("Define daemonSet")
 		daemonSet := daemonset.DefineDaemonSet(randomNamespace, globalhelper.GetConfiguration().General.TestImage,
 			tsparams.TnfTargetPodLabels, tsparams.TestDaemonSetName)

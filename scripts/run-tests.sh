@@ -18,6 +18,11 @@ if [[ ${ENABLE_PARALLEL} == "true" ]]; then
 	PFLAG="-p"
 fi
 
+if [[ ${LIMIT_PROCS} == "true" ]]; then
+	echo "Limiting the number of processes to 4"
+	PFLAG="-procs=2"
+fi
+
 # Allow for flake retries
 FFLAG=""
 if [[ ${ENABLE_FLAKY_RETRY} == "true" ]]; then

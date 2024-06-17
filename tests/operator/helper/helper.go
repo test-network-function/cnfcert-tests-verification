@@ -29,6 +29,21 @@ func DeployTestOperatorGroup(namespace string) error {
 	return nil
 }
 
+func ModifyCsvInstallModeType(csvPrefix, namespace string, installModeType v1alpha1.InstallModeType) error {
+	csv, err := GetCsvByPrefix(csvPrefix, namespace)
+	if err != nil {
+		return err
+	}
+
+	csv.Spec.InstallModes = []v1alpha1.InstallMode{
+		{
+			Type: installModeType,
+		},
+	}
+
+	return updateCsv(namespace, csv)
+}
+
 func WaitUntilOperatorIsReady(csvPrefix, namespace string) error {
 	var err error
 

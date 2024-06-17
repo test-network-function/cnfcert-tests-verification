@@ -36,7 +36,7 @@ var _ = Describe("Networking undeclared-container-ports-usage,", func() {
 		globalhelper.AfterEachCleanupWithRandomNamespace(randomNamespace, randomReportDir, randomTnfConfigDir, tsparams.WaitingTime)
 	})
 
-	It("one deployment, one pod, container declares and uses port 8080", func() {
+	It("one deployment, one pod, container declares and uses port 8080", Serial, func() {
 
 		By("Define deployment and create it on cluster")
 		dep, err := tshelper.DefineDeploymentWithContainerPorts("networking-deployment", randomNamespace, 1,
@@ -65,7 +65,6 @@ var _ = Describe("Networking undeclared-container-ports-usage,", func() {
 			tsparams.TnfUndeclaredContainerPortsUsageTcName,
 			globalparameters.TestCasePassed, randomReportDir)
 		Expect(err).ToNot(HaveOccurred())
-
 	})
 
 	It("one deployment, one pod, container declares port 8081 but does not use any", func() {
@@ -98,7 +97,7 @@ var _ = Describe("Networking undeclared-container-ports-usage,", func() {
 		Expect(err).ToNot(HaveOccurred())
 	})
 
-	It("one deployment, one pod, container declares port 8081 but uses port 8080 instead [negative]", func() {
+	It("one deployment, one pod, container declares port 8081 but uses port 8080 instead [negative]", Serial, func() {
 
 		By("Define deployment and create it on cluster")
 		dep, err := tshelper.DefineDeploymentWithContainerPorts("networking-deployment", randomNamespace, 1,
@@ -190,7 +189,7 @@ var _ = Describe("Networking undeclared-container-ports-usage,", func() {
 	})
 
 	//nolint:lll
-	It("one deployment, one pod, two containers, the first one uses and declares port 8080, the second one uses port 8081 but declares 8082 [negative]", func() {
+	It("one deployment, one pod, two containers, the first one uses and declares port 8080, the second one uses port 8081 but declares 8082 [negative]", Serial, func() {
 
 		By("Define deployment and create it on cluster")
 		ports := []corev1.ContainerPort{{ContainerPort: 8080, Protocol: "TCP"}, {ContainerPort: 8082, Protocol: "TCP"}}
