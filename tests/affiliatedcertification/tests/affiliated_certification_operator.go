@@ -135,7 +135,7 @@ var _ = Describe("Affiliated-certification operator certification,", Serial, fun
 		})
 
 	// 46697
-	It("two operators to test, one is in certified-operators organization and its version is certified,"+
+	FIt("two operators to test, one is in certified-operators organization and its version is certified,"+
 		" one is not in certified-operators organization [negative]", func() {
 		By("Label operators to be certified")
 
