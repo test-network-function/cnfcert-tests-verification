@@ -195,14 +195,51 @@ func CopyClaimFileToTcFolder(tcName, formattedTcName, reportDir string) {
 		glog.Error("file does not exist ", srcClaim)
 	}
 
+	// Read the srcClaim file and unmarshal it into a claim object
+	claimRoot, err := OpenClaimReport(reportDir)
+	if err != nil {
+		glog.Fatalf("failed to open claim report %s", srcClaim)
+	}
+
+	fmt.Printf("Number of results in claimRoot: %d", len(claimRoot.Claim.Results))
+
+	// Loop through the claim results and throw away the ones that are not the current test case
+	var tempClaimRoot claim.Root
+	tempClaimRoot.Claim = claimRoot.Claim
+
+	// Create a new map to store the results of the current test case
+	// tempClaimRoot.Claim.Results = make(map[string]interface{})
+	for testCaseClaim := range claimRoot.Claim.Results {
+		// fmt.Printf("testCaseClaim: %s, tcName: %s", testCaseClaim, tcName)
+		if formatTestCaseName(testCaseClaim) != formatTestCaseName(tcName) {
+			// delete the result from the map
+			delete(tempClaimRoot.Claim.Results, testCaseClaim)
+		}
+	}
+
+	// Marshal the claim object back into a json string
+	claimJson, err := json.Marshal(tempClaimRoot)
+	if err != nil {
+		glog.Fatalf("failed to marshal claim object %s", srcClaim)
+	}
+
 	// create destination folder
 	err = os.MkdirAll(dstDir, os.ModePerm)
 	if err != nil {
 		glog.Error("could not create dest directory= %s, err=%s", dstDir, err)
 	}
 
-	err = CopyFiles(srcClaim, dstClaim)
+	// Write the claimJson to the destination folder
+	err = os.WriteFile(dstClaim, claimJson, 0644)
 	if err != nil {
-		glog.Fatalf("failed to copy %s to %s", srcClaim, dstClaim)
+		glog.Fatalf("failed to write claim file %s", dstClaim)
 	}
+
+	// fmt.Printf("Saved claim file to %s\n", dstClaim)
+	// time.Sleep(5 * time.Minute)
+
+	// err = CopyFiles(srcClaim, dstClaim)
+	// if err != nil {
+	// 	glog.Fatalf("failed to copy %s to %s", srcClaim, dstClaim)
+	// }
 }
